@@ -79,10 +79,10 @@ jobs:
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
       run: >
         cmake
-        -S ${{github.workspace}}/src
-        -B ${{github.workspace}}/build
+        -S ${GITHUB_WORKSPACE}/src
+        -B ${GITHUB_WORKSPACE}/build
         -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
-        -DCMAKE_INSTALL_PREFIX=${{github.workspace}}/install
+        -DCMAKE_INSTALL_PREFIX=${GITHUB_WORKSPACE}/install
         -DNCRYSTAL_ENABLE_EXAMPLES=ON
         -DNCRYSTAL_BUILD_STRICT=ON
         -DNCRYSTAL_ENABLE_SETUPSH=ON
@@ -90,28 +90,28 @@ jobs:
     - name: Build
       run: >
         cmake
-        --build ${{github.workspace}}/build
+        --build ${GITHUB_WORKSPACE}/build
         --config ${{env.BUILD_TYPE}}
 
     - name: Install
-      run: cmake --install ${{github.workspace}}/build
+      run: cmake --install ${GITHUB_WORKSPACE}/build
 
     - name: Look around
-      run: ls -l ${{github.workspace}}
+      run: ls -l ${GITHUB_WORKSPACE}
 
     - name: Tests without environment setup
       run: |
         set -eux
-        ${{github.workspace}}/install/bin/ncrystal-config --summary
-        ${{github.workspace}}/install/bin/nctool --test
-        ${{github.workspace}}/install/bin/ncrystal_example_c
-        ${{github.workspace}}/install/bin/ncrystal_example_cpp
-        ${{github.workspace}}/install/bin/nctool --dump 'Al_sg225.ncmat;dcutoff=1.5'
+        ${GITHUB_WORKSPACE}/install/bin/ncrystal-config --summary
+        ${GITHUB_WORKSPACE}/install/bin/nctool --test
+        ${GITHUB_WORKSPACE}/install/bin/ncrystal_example_c
+        ${GITHUB_WORKSPACE}/install/bin/ncrystal_example_cpp
+        ${GITHUB_WORKSPACE}/install/bin/nctool --dump 'Al_sg225.ncmat;dcutoff=1.5'
 
     - name: Tests with eval ncrystal-config setup
       run: |
         set -eux
-        eval $(${{github.workspace}}/install/bin/ncrystal-config --setup)
+        eval $(${GITHUB_WORKSPACE}/install/bin/ncrystal-config --setup)
         ncrystal-config --summary
         nctool --test
         ncrystal-config --help
@@ -153,7 +153,7 @@ jobs:
     - name: Tests with ncrystal_setup.sh
       run: |
         set -eux
-        . ${{github.workspace}}/install/ncrystal_setup.sh
+        . ${GITHUB_WORKSPACE}/install/ncrystal_setup.sh
         ncrystal-config --summary
         nctool --test
         ncrystal_vdos2ncmat --help
@@ -171,7 +171,7 @@ jobs:
         ncrystal_example_py
         python3 -m NCrystal.test
         python3 -c 'import NCrystal; NCrystal.test()'
-        . ${{github.workspace}}/install/ncrystal_unsetup.sh
+        . ${GITHUB_WORKSPACE}/install/ncrystal_unsetup.sh
 
     #Final step, so tmate step can check if we got this far.
     - name: Final
