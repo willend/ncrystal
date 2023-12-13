@@ -42,7 +42,7 @@ jobs:
     env:
       CC: ${{ matrix.CC }}
       CXX: ${{ matrix.CXX }}
-      defaults:
+    defaults:
       run:
         shell: bash -el {0}
 
